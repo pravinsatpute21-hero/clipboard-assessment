@@ -1,0 +1,14 @@
+# Bellhaven CRM Pipeline — Daily Schedule
+# Runs every day at 6 AM
+
+# Step 1 — Scrape website
+0 6 * * * cd /Users/pravinsanjaysatpute/PycharmProjects/clipboard_assessment && python scraper.py
+
+# Step 2 — Pull CRM data
+5 6 * * * cd /Users/pravinsanjaysatpute/PycharmProjects/clipboard_assessment && python crm_api.py
+
+# Step 3 — Run matching logic
+10 6 * * * cd /Users/pravinsanjaysatpute/PycharmProjects/clipboard_assessment && python matcher.py
+
+# Re-runs are safe — decisions.json tracks already decided items
+# Pipeline skips previously decided items automatically
