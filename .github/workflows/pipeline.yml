@@ -1,0 +1,40 @@
+name: Bellhaven CRM Pipeline
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests pandas beautifulsoup4 rapidfuzz streamlit
+
+      - name: Run scraper
+        run: python scraper.py
+
+      - name: Run CRM API pull
+        run: python crm_api.py
+
+      - name: Run matcher
+        run: python matcher.py
+
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: pipeline-results
+          path: |
+            website_communities.csv
+            crm_accounts.csv
+            match_results.csv
